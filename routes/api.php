@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/', function() {
+    return 'API is working!';
 });
+
+// Test Authentication
+Route::get('/rahasia', function() {
+    return 'Ini pesan rahasia: !#$&(!$^';
+})->middleware('auth.jwt');
+
+// Authentication
+Route::post('login', [AuthenticationController::class, 'login']);
+
+// Product
+Route::apiResource('product', ProductsController::class);
+
+// Category
+Route::apiResource('category', CategoriesController::class);
