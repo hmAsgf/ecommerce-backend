@@ -28,6 +28,8 @@ Route::get('/rahasia', function() {
 
 // Authentication
 Route::post('login', [AuthenticationController::class, 'login']);
+Route::get('login/google', [AuthenticationController::class, 'googleRedirect']);
+Route::get('login/google/callback', [AuthenticationController::class, 'loginGoogle']);
 
 // Product
 Route::apiResource('product', ProductsController::class);

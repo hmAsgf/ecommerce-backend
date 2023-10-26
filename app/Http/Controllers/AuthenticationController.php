@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Roles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Users;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthenticationController extends Controller
 {
@@ -26,7 +27,7 @@ class AuthenticationController extends Controller
         if($user && Hash::check($request->password, $user->password)) {
             $payload = [
                 'id' => $user->id,
-                'role' => Roles::getRoleValue($user->id),
+                'role' => Roles::getRoleValue($user->role_id),
                 'email' => $user->email
             ];
             $token = JWTController::createToken($payload);
@@ -36,6 +37,34 @@ class AuthenticationController extends Controller
         else {
             return response()->json([
                 'message' => 'Email atau password salah!',
+                'status' => false,
+            ], 400);
+        }
+    }
+
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function loginGoogle()
+    {
+        try {
+            $userGoogle = Socialite::driver('google')->user();
+            $user = Users::loginGoogle($userGoogle);
+
+            $payload = [
+                'id' => $user->id,
+                'role' => Roles::getRoleValue($user->role_id),
+                'email' => $user->email
+            ];
+            $token = JWTController::createToken($payload);
+
+            return response()->json(['token' => $token]);
+        }
+        catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan!',
                 'status' => false,
             ], 400);
         }

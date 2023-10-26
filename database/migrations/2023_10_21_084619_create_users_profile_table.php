@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnUpdate()->restrictOnDelete();
             $table->string('name');
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
             $table->smallInteger('age')->nullable();
-            $table->string('phone_number')->unique();
-            $table->text('address');
+            $table->string('phone_number')->unique()->nullable();
+            $table->text('address')->nullable();
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
