@@ -31,4 +31,23 @@ class Users extends Model
     {
         return self::query()->where('email', $email)->first();
     }
+
+    public static function loginGoogle($user)
+    {
+        $findUser = self::query()->where('google_id',$user->id)->first();
+
+        if(!$findUser) {
+            $newUser = self::create([
+                            'role_id' => 2,
+                            'google_id' => $user->id,
+                            'email' => $user->email,
+                        ]);
+                        
+            UsersProfile::loginGoogle($newUser->id, $user);
+
+            return $newUser;
+        }
+
+        return $findUser;
+    }
 }

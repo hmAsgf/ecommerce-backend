@@ -14,4 +14,12 @@ class UsersProfile extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
+
+    public static function loginGoogle($id, $user)
+    {
+        return self::create([
+            'user_id' => $id,
+            'name' => $user->name,
+        ]);
+    }
 }
