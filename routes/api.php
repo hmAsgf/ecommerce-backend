@@ -30,7 +30,11 @@ Route::get('/rahasia', function() {
 Route::post('login', [AuthenticationController::class, 'login']);
 
 // Product
-Route::apiResource('product', ProductsController::class);
+Route::get('product', [ProductsController::class, 'index']);
+Route::get('product/{id}', [ProductsController::class, 'show']);
+Route::post('product', [ProductsController::class, 'store'])->middleware('auth.jwt');
+Route::put('product/{id}', [ProductsController::class, 'update'])->middleware('auth.jwt');
+Route::delete('product/{id}', [ProductsController::class, 'destroy'])->middleware('auth.jwt');
 
 // Category
 Route::apiResource('category', CategoriesController::class);

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('category_id')->references('id')->on('categories')->cascadeOnUpdate()->restrictOnDelete();
             $table->string('name')->unique();
             $table->integer('price');
+            $table->string('image');
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
