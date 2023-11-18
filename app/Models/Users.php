@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class Users extends Model
@@ -17,11 +18,23 @@ class Users extends Model
         'created_at', 'updated_at',
     ] ;
 
-    public static function validate($data)
+    public static function loginValidate($data)
     {
         $rules = [
             'email' => 'required',
             'password' => 'required',
+        ];
+
+        return Validator::make($data, $rules);
+    }
+
+    public static function registerValidate($data)
+    {
+        $rules = [
+            'role_id' => 'required',
+            'email' => 'required|unique:users,email',
+            'password' => 'required',
+            'confirmPassword' => 'required|same:password',
         ];
 
         return Validator::make($data, $rules);
@@ -42,12 +55,18 @@ class Users extends Model
                             'google_id' => $user->id,
                             'email' => $user->email,
                         ]);
-                        
+
             UsersProfile::loginGoogle($newUser->id, $user);
 
             return $newUser;
         }
 
         return $findUser;
+    }
+
+    public static function insert($user)
+    {
+        $user['password'] = Hash::make($user['password']);
+        return self::query()->create($user->all());
     }
 }
