@@ -29,7 +29,7 @@ class UsersProfileSeeder extends Seeder
                 'phone_number' => '081235981551', 'address' => '..., Sidoarjo'
             ],
             [
-                'user_id' => 2, 'name' => 'M. Mahameru. A', 'birth_date' => '2003-01-06', 'age' => 20,
+                'user_id' => 3, 'name' => 'M. Mahameru. A', 'birth_date' => '2003-01-06', 'age' => 20,
                 'phone_number' => '085646452991', 'address' => '..., Sidoarjo'
             ],
         ];
