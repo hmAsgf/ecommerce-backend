@@ -40,4 +40,9 @@ Route::put('product/{id}', [ProductsController::class, 'update'])->middleware('a
 Route::delete('product/{id}', [ProductsController::class, 'destroy'])->middleware('auth.jwt');
 
 // Category
-Route::apiResource('category', CategoriesController::class);
+// Route::apiResource('category', CategoriesController::class);
+Route::get('category', [CategoriesController::class, 'index']);
+Route::get('category/{id}', [CategoriesController::class, 'show']);
+Route::post('category', [CategoriesController::class, 'store'])->middleware('auth.jwt');
+Route::put('category/{id}', [CategoriesController::class, 'update'])->middleware('auth.jwt');
+Route::delete('category/{id}', [CategoriesController::class, 'destroy'])->middleware('auth.jwt');

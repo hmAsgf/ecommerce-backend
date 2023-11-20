@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class Categories extends Model
 {
@@ -15,8 +16,45 @@ class Categories extends Model
         'created_at', 'updated_at'
     ];
 
-    public static function getCategories()
+    private static $folderpath = 'public/categories/';
+
+    public static function getAll()
     {
-        return self::query()->get();
+        
+        return self::select('categories.id', 'categories.name as category')
+            ->selectRaw('COUNT(products.id) as item_count')
+            ->Leftjoin('products', 'products.category_id', 'categories.id')
+            ->groupBy('categories.id')
+            ->get();
+    }
+
+    public static function getById($id)
+    {
+        return self::query()->where('id',$id)->get()->first();
+    }
+
+    public static function validate($data, $id=null)
+    {
+        $rules = [
+            'name' => "required|unique:categories,name,$id"
+        ];
+
+        return Validator::make($data, $rules);
+    }
+
+    public static function insert($categories)
+    {
+        return self::query()->create($categories->all());
+    }
+
+    public static function modify($id, $categories)
+    {
+        return self::query()->find($id)
+                            ->update($categories->all());
+    }
+
+    public static function remove($id)
+    {
+        return self::query()->find($id)->delete();
     }
 }
