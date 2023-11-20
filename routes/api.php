@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ProductsController;
 use Illuminate\Http\Request;
@@ -46,3 +47,9 @@ Route::get('category/{id}', [CategoriesController::class, 'show']);
 Route::post('category', [CategoriesController::class, 'store'])->middleware('auth.jwt');
 Route::put('category/{id}', [CategoriesController::class, 'update'])->middleware('auth.jwt');
 Route::delete('category/{id}', [CategoriesController::class, 'destroy'])->middleware('auth.jwt');
+
+// Carts
+Route::get('cart', [CartsController::class, 'index'])->middleware('auth.jwt');
+Route::post('cart', [CartsController::class, 'store'])->middleware('auth.jwt');
+Route::put('cart/{id}', [CartsController::class, 'update'])->middleware('auth.jwt');
+Route::delete('cart/{id}', [CartsController::class, 'destroy'])->middleware('auth.jwt');

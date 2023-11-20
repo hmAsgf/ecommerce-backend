@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carts;
 use App\Models\Roles;
 use Illuminate\Http\Request;
 use App\Models\Users;
@@ -88,6 +89,7 @@ class AuthenticationController extends Controller
             $user = Users::insert($request);
             $request['user_id'] = $user->id;
             $userProfile = UsersProfile::insert($request);
+            Carts::insert($request);
             DB::commit();
 
             $payload = [

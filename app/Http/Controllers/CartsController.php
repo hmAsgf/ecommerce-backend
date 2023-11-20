@@ -2,50 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Products;
+use App\Models\CartItems;
+use App\Models\Carts;
 use Illuminate\Http\Request;
 
-class ProductsController extends Controller
+class CartsController extends Controller
 {
     public function index()
     {
+        $cart = Carts::getByUserId(JWTController::decodeToken()->id);
         return response()->json([
-            'products' => Products::getAll(),
-            'status' => true,
-        ]);
-    }
-
-    public function show($id)
-    {
-        $product = Products::getById($id);
-
-        if(!$product) {
-            return response()->json([
-                'message' => 'Produk tidak ditemukan!',
-                'status' => false,
-            ], 400);
-        }
-
-        return response()->json([
-            'product' => $product,
+            'items' => CartItems::getAllByCartId($cart->id),
             'status' => true,
         ]);
     }
 
     public function store(Request $request)
     {
-        $validator = Products::validate($request->all());
+        $cart = Carts::getByUserId(JWTController::decodeToken()->id);
+        $request['cart_id'] = $cart->id;
 
-        if($validator->fails()){
+        $validator = CartItems::validate($request->all());
+        if($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
                 'status' => false,
             ], 400);
         }
 
-        $product = Products::insert($request);
-
-        if(!$product){
+        $item = CartItems::insert($request);
+        if(!$item) {
             return response()->json([
                 'message' => 'Produk gagal ditambahkan!',
                 'status' => false,
@@ -53,25 +39,26 @@ class ProductsController extends Controller
         }
 
         return response()->json([
-            'message' => 'Produk berhasil ditambahkan!',
+            'message' => 'Produk berhasil ditambahkan',
             'status' => true,
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Products::validate($request->all(), $id);
+        $cart = Carts::getByUserId(JWTController::decodeToken()->id);
+        $request['cart_id'] = $cart->id;
 
-        if($validator->fails()){
+        $validator = CartItems::validate($request->all());
+        if($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
-                'status' => false
+                'status' => false,
             ], 400);
         }
 
-        $product = Products::modify($id, $request);
-
-        if(!$product){
+        $item = CartItems::modify($id, $request);
+        if(!$item) {
             return response()->json([
                 'message' => 'Produk gagal diubah!',
                 'status' => false,
@@ -86,9 +73,8 @@ class ProductsController extends Controller
 
     public function destroy($id)
     {
-        $product = Products::remove($id);
-
-        if(!$product){
+        $item = CartItems::remove($id);
+        if(!$item) {
             return response()->json([
                 'message' => 'Produk gagal dihapus!',
                 'status' => false,
