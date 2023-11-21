@@ -20,11 +20,11 @@ class Categories extends Model
 
     public static function getAll()
     {
-        
-        return self::select('categories.id', 'categories.name as category')
+
+        return self::select('categories.id', 'categories.name')
             ->selectRaw('COUNT(products.id) as item_count')
             ->Leftjoin('products', 'products.category_id', 'categories.id')
-            ->groupBy('categories.id')
+            ->groupBy('categories.id', 'categories.name')
             ->get();
     }
 
