@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CartItems extends Model
@@ -19,7 +20,7 @@ class CartItems extends Model
     public static function validate($data)
     {
         $rules = [
-            'cart_id' => 'required',
+            'user_id' => 'required',
             'product_id' => 'required',
             'quantity' => 'required',
             'sub_total' => 'required',
@@ -28,32 +29,20 @@ class CartItems extends Model
         return Validator::make($data, $rules);
     }
 
-    public static function getAllByCartId($cartId)
+    public static function getItemsByUserId($id)
     {
-        return self::select('cart_items.id', 'products.id as product_id', 'products.name as product',
+        return self::select('cart_items.id', 'products.id as product_id', 'products.name', 'products.image',
                             'products.price', 'cart_items.quantity', 'cart_items.sub_total')
-                    ->join('products', 'products.id', 'cart_items.product_id')
-                    ->where('cart_id', $cartId)
-                    ->get();
-    }
-
-    public static function getByCartIdProductId($cartId, $productId)
-    {
-        return self::query()->where('cart_id', $cartId)
-                    ->where('product_id', $productId)->get()->first();
+                ->join('products', 'products.id', 'cart_items.product_id')
+                ->where('user_id', $id)
+                ->get();
     }
 
     public static function insert($item)
     {
-        $hasItem = self::getByCartIdProductId($item->cart_id, $item->product_id);
-
-        if($hasItem) {
-            $item['quantity'] += $hasItem['quantity'];
-            $item['sub_total'] += $hasItem['sub_total'];
-            return self::query()->update($item->all());
-        }
-
-        return self::query()->create($item->all());
+        return self::updateOrInsert(
+                ['user_id' => $item['user_id'], 'product_id' => $item['product_id']],
+                ['quantity' => DB::raw('quantity + 1'), 'sub_total' => DB::raw("sub_total + {$item['sub_total']}")]);
     }
 
     public static function modify($id, $item)
