@@ -89,7 +89,6 @@ class AuthenticationController extends Controller
             $user = Users::insert($request);
             $request['user_id'] = $user->id;
             $userProfile = UsersProfile::insert($request);
-            Carts::insert($request);
             DB::commit();
 
             $payload = [

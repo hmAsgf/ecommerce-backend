@@ -49,7 +49,7 @@ Route::put('category/{id}', [CategoriesController::class, 'update'])->middleware
 Route::delete('category/{id}', [CategoriesController::class, 'destroy'])->middleware('auth.jwt');
 
 // Carts
-Route::get('cart', [CartsController::class, 'index'])->middleware('auth.jwt');
+Route::get('cart/{id}', [CartsController::class, 'show'])->middleware('auth.jwt');
 Route::post('cart', [CartsController::class, 'store'])->middleware('auth.jwt');
 Route::put('cart/{id}', [CartsController::class, 'update'])->middleware('auth.jwt');
 Route::delete('cart/{id}', [CartsController::class, 'destroy'])->middleware('auth.jwt');

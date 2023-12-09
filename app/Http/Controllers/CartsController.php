@@ -8,21 +8,20 @@ use Illuminate\Http\Request;
 
 class CartsController extends Controller
 {
-    public function index()
+    public function show($id)
     {
-        $cart = Carts::getByUserId(JWTController::decodeToken()->id);
+        $cartItems = CartItems::getItemsByUserId($id);
+
         return response()->json([
-            'items' => CartItems::getAllByCartId($cart->id),
+            'items' => $cartItems,
             'status' => true,
         ]);
     }
 
     public function store(Request $request)
     {
-        $cart = Carts::getByUserId(JWTController::decodeToken()->id);
-        $request['cart_id'] = $cart->id;
-
         $validator = CartItems::validate($request->all());
+
         if($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
@@ -31,6 +30,7 @@ class CartsController extends Controller
         }
 
         $item = CartItems::insert($request);
+
         if(!$item) {
             return response()->json([
                 'message' => 'Produk gagal ditambahkan!',
@@ -39,17 +39,15 @@ class CartsController extends Controller
         }
 
         return response()->json([
-            'message' => 'Produk berhasil ditambahkan',
+            'message' => 'Produk berhasil ditambahkan!',
             'status' => true,
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $cart = Carts::getByUserId(JWTController::decodeToken()->id);
-        $request['cart_id'] = $cart->id;
-
         $validator = CartItems::validate($request->all());
+
         if($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
@@ -58,6 +56,7 @@ class CartsController extends Controller
         }
 
         $item = CartItems::modify($id, $request);
+
         if(!$item) {
             return response()->json([
                 'message' => 'Produk gagal diubah!',
@@ -73,9 +72,10 @@ class CartsController extends Controller
 
     public function destroy($id)
     {
-        $item = CartItems::remove($id);
-        if(!$item) {
-            return response()->json([
+        $item =  CartItems::remove($id);
+
+        if(!$item){
+            return response()->json()([
                 'message' => 'Produk gagal dihapus!',
                 'status' => false,
             ], 400);
