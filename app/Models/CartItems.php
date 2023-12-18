@@ -54,4 +54,9 @@ class CartItems extends Model
     {
         return self::query()->find($id)->delete();
     }
+
+    public static function removeByUserId($userId)
+    {
+        return self::where('user_id', $userId)->delete();
+    }
 }
