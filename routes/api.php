@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,3 +54,7 @@ Route::get('cart/{id}', [CartsController::class, 'show'])->middleware('auth.jwt'
 Route::post('cart', [CartsController::class, 'store'])->middleware('auth.jwt');
 Route::put('cart/{id}', [CartsController::class, 'update'])->middleware('auth.jwt');
 Route::delete('cart/{id}', [CartsController::class, 'destroy'])->middleware('auth.jwt');
+
+// Orders
+Route::get('order/{id}', [OrdersController::class, 'show'])->middleware('auth.jwt');
+Route::post('order', [OrdersController::class, 'store'])->middleware('auth.jwt');
