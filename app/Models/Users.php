@@ -69,4 +69,27 @@ class Users extends Model
         $user['password'] = Hash::make($user['password']);
         return self::query()->create($user->all());
     }
+
+    public static function passwordValidate($data)
+    {
+        $rules = [
+            'old_password' => 'required',
+            'password' => 'required',
+            'confirm_password' => 'required|same:password'
+        ];
+
+        return Validator::make($data, $rules);
+    }
+
+    public static function modifyPassword($id, $newPassword)
+    {
+        return self::query()->find($id)
+                            ->update(['password' => bcrypt($newPassword)]);
+    }
+
+    public static function getById($id)
+    {
+        return self::query()->where('id',$id)->get()->first();
+    }
+
 }

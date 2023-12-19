@@ -35,7 +35,7 @@ class AuthenticationController extends Controller
             ], 400);
         }
 
-        $userProfile = UsersProfile::getUserProfileByUserId($user->id);
+        $userProfile = UsersProfile::getById($user->id);
 
         if($user && Hash::check($request->password, $user->password)) {
             $payload = [
