@@ -5,6 +5,8 @@ use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProfileController;
+use App\Models\UsersProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -58,3 +60,8 @@ Route::delete('cart/{id}', [CartsController::class, 'destroy'])->middleware('aut
 // Orders
 Route::get('order/{id}', [OrdersController::class, 'show'])->middleware('auth.jwt');
 Route::post('order', [OrdersController::class, 'store'])->middleware('auth.jwt');
+
+//Account
+Route::get('account/{id}', [ProfileController::class, 'show'])->middleware('auth.jwt');
+Route::put('account/{id}', [ProfileController::class, 'update'])->middleware('auth.jwt');
+Route::put('account/password/{id}', [ProfileController::class, 'updatePassword'])->middleware('auth.jwt');
