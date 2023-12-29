@@ -21,7 +21,6 @@ class UsersProfile extends Model
         $rules = [
             'name' => 'required',
             'birth_date' => 'required',
-            'age' => 'required',
             'phone_number' => "required|unique:users_profile,phone_number,$id",
             'address' => 'required',
         ];
