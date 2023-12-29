@@ -122,7 +122,7 @@ class AuthenticationController extends Controller
         try {
             $userGoogle = Socialite::driver('google')->user();
             $user = Users::loginGoogle($userGoogle);
-            $userProfile = UsersProfile::getUserProfileByUserId($user->id);
+            $userProfile = UsersProfile::getById($user->id);
 
             $payload = [
                 'id' => $user->id,
@@ -132,14 +132,16 @@ class AuthenticationController extends Controller
             ];
             $token = JWTController::createToken($payload);
 
-            return response()->json([
-                'token' => $token,
-                'status' => true,
-            ]);
+            // return response()->json([
+            //     'token' => $token,
+            //     'status' => true,
+            // ]);
+            return redirect('http://localhost:5173/login?token='.$token);
         }
         catch (\Throwable $th) {
             return response()->json([
                 'message' => 'Terjadi kesalahan!',
+                'error' => $th->getMessage(),
                 'status' => false,
             ], 400);
         }
