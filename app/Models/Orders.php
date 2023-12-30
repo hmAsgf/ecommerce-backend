@@ -31,12 +31,17 @@ class Orders extends Model
         return Validator::make($data, $rules);
     }
 
-    public static function getOrders($userId,)
+    public static function getOrdersByUserId($userId)
     {
         return self::select('id', 'date', 'total', 'status')
                     ->where('user_id', $userId)
                     ->orderBy('date', 'DESC')
                     ->get();
+    }
+
+    public static function getOrderById($id)
+    {
+        return self::query()->where('id', $id)->get()->first();
     }
 
     public static function insert($order)
