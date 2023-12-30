@@ -12,7 +12,7 @@ class OrdersController extends Controller
 {
     public function show($id)
     {
-        $orders = Orders::getOrders($id);
+        $orders = Orders::getOrdersByUserId($id);
 
         return response()->json([
             'orders' => $orders,
@@ -50,6 +50,7 @@ class OrdersController extends Controller
 
             return response()->json([
                 'message' => 'Order berhasil ditambahkan!',
+                'snap_url' => PaymentsController::getSnapToken($order->id),
                 'status' => true,
             ]);
         } catch (\Throwable $th) {

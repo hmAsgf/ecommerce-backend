@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CartsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Models\UsersProfile;
@@ -65,3 +66,7 @@ Route::post('order', [OrdersController::class, 'store'])->middleware('auth.jwt')
 Route::get('account/{id}', [ProfileController::class, 'show'])->middleware('auth.jwt');
 Route::put('account/{id}', [ProfileController::class, 'update'])->middleware('auth.jwt');
 Route::put('account/password/{id}', [ProfileController::class, 'updatePassword'])->middleware('auth.jwt');
+
+// Payments
+Route::get('payment/{id}', [PaymentsController::class, 'getSnapToken']);
+Route::post('payment/callback', [PaymentsController::class, 'callback']);
